@@ -3,7 +3,6 @@
 /**
  * This class reads a directory of media files and generates a
  * XML/XSPF formatted playlist
- * which may be used in concordance with Play.js
  * 
  * @author     lacymorrow
  * @website    www.lacymorrow.com
@@ -12,7 +11,7 @@
 */
 
 ########################
-# play.js
+# playlister.php
 # Lacy Morrow 2012
 # www.lacymorrow.com
 # getID3 - HTML5BoilerPlate - MediaElement.js
@@ -29,7 +28,7 @@ $id3 = true;
 # CACHE PLAYLIST - boolean
 $cache = true;
 
-# CACHE PLAYLIST FILE - path/url
+# CACHE PLAYLIST FILE - path/url - relative
 $playlist = 'xplay_generated_playlist.xml';
 
 # RETRIEVE ARTWORK - boolean
@@ -46,7 +45,7 @@ $media = 'media';
 #####################################
 ###   BEGIN PLAYLIST GENERATION   ###
 #####################################
-// include id3
+// include id3 - path to id3
 include_once('./getid3/getid3.php');
 
 /*
@@ -58,6 +57,7 @@ $playArr = array();
 $imgArr = array();
 $gloArr = array();
 // use cached playlist if exists and valid
+date_default_timezone_set('UTC');
 if ($cache === true && file_exists ( $playlist ) && (date("z")-date("z", filemtime($playlist)) >= 7)){
 	$playFile = file_get_contents( $playlist );
 }
@@ -121,8 +121,8 @@ function generateXML($trackArr){
  */
 #####################################
 
-function scanMedia( $path = '.', $id3, $level = 0, $dir = ''){ 
-	global $playArr, $imgArr, $gloArr;
+function scanMedia( $path = '.', $id3, $level = 1, $dir = ''){ 
+	global $playArr, $imgArr, $gloArr, $creator, $album;
     $ignore = array( 'cgi-bin', '.', '..' ); 
     // Directories to ignore
     $dh = @opendir( $path ); 
@@ -133,8 +133,12 @@ function scanMedia( $path = '.', $id3, $level = 0, $dir = ''){
         if( !in_array( $file, $ignore ) ){ 
         // Check that this file is not to be ignored 
             if( is_dir( "$path/$file" ) ){ 
-            	if( $level == 1 ){ $creator = $file; } else { $creator = ''; }
-				if( $level == 2 ){ $album = $file; } else { $album = ''; }
+            	echo $level;
+            	if( $level == 1 ){ 
+            		$creator = $file; $album = '' ;
+            	} else if( $level == 2 ){ 
+            		$album = $file; 
+            	} else { $creator = ''; $album = ''; }
 				// Store images for Creator/Album
 	            scanMedia( "$path/$file",$id3, ($level+1), (($dir == '')?$path:$dir)); 
                 // Re-call this same function but on a new directory. 
@@ -176,11 +180,13 @@ function scanMedia( $path = '.', $id3, $level = 0, $dir = ''){
 						$iAlbum = (isset($id3Info['comments_html']['artist'][0]) ? $id3Info['comments_html']['album'][0] : $album);
 						$iTitle = (isset($id3Info['comments_html']['title'][0]) ? $id3Info['comments_html']['title'][0] : $filename);
 						$iAnnotation = (isset($id3Info['comments_html']['comment'][0]) ? $id3Info['comments_html']['comment'][0] : '');
+						$playArr[$filename] = array('filename' => $filename, 'type' => checkType($ext), 'creator' => $iCreator, 'album' => $iAlbum, 'title' => $iTitle, 'annotation' => $iAnnotation, 'duration' => $iDuration, 'location' => array($file), 'image' => '', 'info' => '', 'path' => $path);
+					} else {
+						$playArr[$filename] = array('filename' => $filename, 'type' => checkType($ext), 'creator' => $creator, 'album' => $album, 'title' => $filename, 'annotation' => '', 'duration' => '', 'location' => array($file), 'image' => '', 'info' => '', 'path' => $path);
 					}
-					$playArr[$filename] = array('filename' => $filename, 'type' => checkType($ext), 'creator' => $iCreator, 'album' => $iAlbum, 'title' => $iTitle, 'annotation' => $iAnnotation, 'duration' => $iDuration, 'location' => array($file), 'image' => '', 'info' => '', 'path' => $path);
 				} else if($ct == 'video') {
 					//IF VIDEO
-					if($playArr[$filename]['location'] === null){
+					if(!isset($playArr[$filename]['location']) || $playArr[$filename]['location'] === NULL){
 						$l = array($file);
 					} else {
 						$l = $playArr[$filename]['location'];
