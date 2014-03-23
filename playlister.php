@@ -8,10 +8,11 @@
  * @author     lacymorrow
  * @website    www.lacymorrow.com
  * @copyright  Copyright (c) 2012 Lacy Morrow. All rights reserved.
+ * @license    Proprietary/Closed Source
 */
 
 ########################
-# playlister.php
+# play.js
 # Lacy Morrow 2012
 # www.lacymorrow.com
 # getID3 - HTML5BoilerPlate - MediaElement.js
@@ -20,9 +21,6 @@
 ####################
 ###   SETTINGS   ###
 ####################
-
-# GENERATE Play.js
-$play = true;
 
 # USE ID3 TAGS TO AUTOMATICALLY FILL TRACK INFORMATION
 # (as opposed to specifying in the directory structure, e.g. 'media/artist/album/track.mp3')
@@ -39,35 +37,6 @@ $artwork = true;
 
 # MEDIA DIRECTORY - path/url - relative
 $media = 'media';
-
-#############################
-###   ADVANCED SETTINGS   ###
-#############################
-$settings = array();
-
-# PLAYER WIDTH
-$settings['width'] = 300;
-$settings['height'] = 225;
-$settings['alphabetize'] = true; // FIX
-$settings['autoplay'] = true; // FIX
-$settings['autoresume'] = true; // FIX
-
-
-# PLAYLIST FORMAT - string
-# %c% - creator
-# %a% - album
-# %t% - title
-# %o% - annotation
-# %i% - info
-# %f% - filename
-# %n% - track number
-# %N% - track number w/ leading zero
-$settings['format'] = '%t%';
-
-# SWF FALLBACK URL
-//$swfurl = 'xspf_jukebox.swf';
-
-
 
 #####################################
 ###  DO NOT EDIT BELOW THIS LINE  ###
@@ -104,6 +73,7 @@ else {
 		fclose($fh);
 	}
 }
+
 // Output Playlist
 echo $playFile;
 
