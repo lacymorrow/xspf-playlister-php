@@ -1,9 +1,9 @@
-xspf-playlister
+xspf-playlister 0.0.1
 ===============
 
 Generate an XSPF playlist file for audio and video files using PHP.
 
-Use it on the command line or as a dead-simple way to keep a playlist on the internet up to date. 
+Use it on the command line once or as a dead-simple way to keep a playlist on the internet up to date. 
 
 ## Usage
 Place all of your media files into a folder called `media`. Copy `playlister.php` and the `getid3` directory to the same location as the media directory. Run `playlister.php` or open it in your browser to generate and print your XSPF file. That's it!

@@ -25,8 +25,8 @@
 # (as opposed to specifying in the directory structure, e.g. 'media/artist/album/track.mp3')
 $id3 = true;
 
-# CACHE PLAYLIST - boolean
-$cache = true;
+# CACHE PLAYLIST - seconds to persist cache before rescan, 0 for no cache
+$cache = 3600;
 
 # CACHE PLAYLIST FILE - path/url - relative
 $playlist = 'xplay_generated_playlist.xml';
@@ -56,9 +56,12 @@ global $playArr, $imgArr, $gloArr;
 $playArr = array();
 $imgArr = array();
 $gloArr = array();
+
+if($argc > 1){ $media = $argc[1]; }
+
 // use cached playlist if exists and valid
 date_default_timezone_set('UTC');
-if ($cache === true && file_exists ( $playlist ) && (date("z")-date("z", filemtime($playlist)) >= 7)){
+if ($cache > 0 && file_exists ( $playlist ) && (date("s")-date("s", filemtime($playlist)) >= $cache)){
 	$playFile = file_get_contents( $playlist );
 }
 // no valid playlist - begin playlist generation
@@ -66,7 +69,7 @@ else {
 	// initiate directory scan
 	$trackArr = scanMedia($media,$id3);
 	$playFile = generateXML($trackArr);
-	if($cache === true){
+	if($cache > 0){
 		// Save playlist
 		$fh = fopen($playlist, 'w') or die("can't write playlist file");
 		fwrite($fh, $playFile);
@@ -133,7 +136,6 @@ function scanMedia( $path = '.', $id3, $level = 1, $dir = ''){
         if( !in_array( $file, $ignore ) ){ 
         // Check that this file is not to be ignored 
             if( is_dir( "$path/$file" ) ){ 
-            	echo $level;
             	if( $level == 1 ){ 
             		$creator = $file; $album = '' ;
             	} else if( $level == 2 ){ 
