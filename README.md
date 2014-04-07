@@ -15,3 +15,8 @@ By default, the [getid3](http://getid3.sourceforge.net/) library is used to scan
 #### Command Line:
 
 `php playlister.php path/to/media > playlist.xspf`
+
+
+## License
+
+[MIT](http://opensource.org/licenses/MIT) © [Lacy Morrow](http://lacymorrow.com)
