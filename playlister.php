@@ -205,26 +205,27 @@ function scanMedia( $path = '.', $id3, $level = 0, $dir = ''){
     closedir( $dh );
 
     // Merge loose image array with associated tracks
-    foreach($playArr as &$playVal){
-    	for ($i=0;$i<sizeOf($imgArr);$i++){
-	    	//Apply track image
-    		if ($imgArr[$i]['filename'] == $playVal['filename']){
-    			$playVal['image'] = $imgArr[$i]['image'];
-    		} else {
-	    	// Apply album/creator image
-    			for ($k=0;$k<sizeOf($gloArr);$k++){
-    				if ($gloArr[$k]['path'] == $playVal['path']){
-    					$playVal['image'] = ''.$gloArr[$k]['path'].'/'.$gloArr[$k]['file'];
-    				}
-    			}
-    		}
-    	}
-    	//echo $globalImg;
-    	// Apply global image
-    	if($playVal['image'] == '' && isset($globalImg)){ $playVal['image'] = $globalImg; }
+    if($artwork){
+	    foreach($playArr as &$playVal){
+	    	for ($i=0;$i<sizeOf($imgArr);$i++){
+		    	//Apply track image
+	    		if ($imgArr[$i]['filename'] == $playVal['filename']){
+	    			$playVal['image'] = $imgArr[$i]['image'];
+	    		} else {
+		    	// Apply album/creator image
+	    			for ($k=0;$k<sizeOf($gloArr);$k++){
+	    				if ($gloArr[$k]['path'] == $playVal['path']){
+	    					$playVal['image'] = ''.$gloArr[$k]['path'].'/'.$gloArr[$k]['file'];
+	    				}
+	    			}
+	    		}
+	    	}
+	    	//echo $globalImg;
+	    	// Apply global image
+	    	if($playVal['image'] == '' && isset($globalImg)){ $playVal['image'] = $globalImg; }
 
-    }
-
+	    }
+	}
     // Directory Scan Complete
     if($dir == ''){
     	return $playArr;
