@@ -14,7 +14,7 @@
 # playlister.php
 # Lacy Morrow 2012
 # www.lacymorrow.com
-# getID3 - HTML5BoilerPlate - MediaElement.js
+# getID3
 ########################
 
 ####################
