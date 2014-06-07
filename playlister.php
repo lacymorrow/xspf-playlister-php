@@ -125,26 +125,26 @@ function generateXML($trackArr){
 #####################################
 
 function scanMedia( $path = '.', $id3, $level = 0, $dir = ''){
-	  global $playArr, $imgArr, $gloArr, $creator, $album;
+	global $playArr, $imgArr, $gloArr, $creator, $album;
     // Directories to ignore
-    $ignore = array( 'cgi-bin', '.', '..' );
+	$ignore = array( 'cgi-bin', '.', '..' );
     // Open the directory to the handle $dh
-    $dh = @opendir( $path );
+	$dh = @opendir( $path );
     // Loop through the directory
-    while( false !== ( $file = readdir( $dh ) ) ){
+	while( false !== ( $file = readdir( $dh ) ) ){
         // Check that this file is not to be ignored
-        if( !in_array( $file, $ignore ) ){
-            if( is_dir( "$path/$file" ) ){
-            	if( $level == 1 ){
-            		$creator = $file; $album = '' ;
-            	} else if( $level == 2 ){
-            		$album = $file;
-            	}
-              // Re-call this same function but on a new directory.
-              // this is what makes function recursive.
-	            scanMedia( "$path/$file",$id3, ($level+1), (($dir == '')?$path:$dir));
-            } else {
-            	$ext = pathinfo($file, PATHINFO_EXTENSION);
+		if( !in_array( $file, $ignore ) ){
+			if( is_dir( "$path/$file" ) ){
+				if( $level == 1 ){
+					$creator = $file; $album = '' ;
+				} else if( $level == 2 ){
+					$album = $file;
+				}
+                // Re-call this same function but on a new directory.
+                // this is what makes function recursive.
+				scanMedia( "$path/$file",$id3, ($level+1), (($dir == '')?$path:$dir));
+			} else {
+				$ext = pathinfo($file, PATHINFO_EXTENSION);
 				// generate file id - COULD BE MORE INTUITIVE (removes extension)
 				$filename = pathinfo($file, PATHINFO_FILENAME);
 				if(strtolower($filename) == 'artwork' && checkType($ext) != 'invalid'){
@@ -172,33 +172,33 @@ function scanMedia( $path = '.', $id3, $level = 0, $dir = ''){
 					 metadata is all available in one location for all tag formats
 					 metainformation is always available under [tags] even if this is not called
 					*/
-					getid3_lib::CopyTagsToComments($id3Info);
+					 getid3_lib::CopyTagsToComments($id3Info);
 					//
-					$iDuration = (isset($id3Info['playtime_string'])) ? $id3Info['playtime_string'] : '';
-					if($id3 == true){
-						$iCreator = (isset($id3Info['comments_html']['artist'][0]) ? $id3Info['comments_html']['artist'][0] : $creator);
-						$iAlbum = (isset($id3Info['comments_html']['artist'][0]) ? $id3Info['comments_html']['album'][0] : $album);
-						$iTitle = (isset($id3Info['comments_html']['title'][0]) ? $id3Info['comments_html']['title'][0] : $filename);
-						$iAnnotation = (isset($id3Info['comments_html']['comment'][0]) ? $id3Info['comments_html']['comment'][0] : '');
-						$playArr[$filename] = array('filename' => $filename, 'type' => checkType($ext), 'creator' => $iCreator, 'album' => $iAlbum, 'title' => $iTitle, 'annotation' => $iAnnotation, 'duration' => $iDuration, 'location' => array($file), 'image' => '', 'info' => '', 'path' => $path);
-					} else {
-						$playArr[$filename] = array('filename' => $filename, 'type' => checkType($ext), 'creator' => $creator, 'album' => $album, 'title' => $filename, 'annotation' => '', 'duration' => '', 'location' => array($file), 'image' => '', 'info' => '', 'path' => $path);
-					}
-				} else if($ct == 'video') {
-					if(!isset($playArr[$filename]['location']) || $playArr[$filename]['location'] === NULL){
+					 $iDuration = (isset($id3Info['playtime_string'])) ? $id3Info['playtime_string'] : '';
+					 if($id3 == true){
+					 	$iCreator = (isset($id3Info['comments_html']['artist'][0]) ? $id3Info['comments_html']['artist'][0] : $creator);
+					 	$iAlbum = (isset($id3Info['comments_html']['artist'][0]) ? $id3Info['comments_html']['album'][0] : $album);
+					 	$iTitle = (isset($id3Info['comments_html']['title'][0]) ? $id3Info['comments_html']['title'][0] : $filename);
+					 	$iAnnotation = (isset($id3Info['comments_html']['comment'][0]) ? $id3Info['comments_html']['comment'][0] : '');
+					 	$playArr[$filename] = array('filename' => $filename, 'type' => checkType($ext), 'creator' => $iCreator, 'album' => $iAlbum, 'title' => $iTitle, 'annotation' => $iAnnotation, 'duration' => $iDuration, 'location' => array($file), 'image' => '', 'info' => '', 'path' => $path);
+					 } else {
+					 	$playArr[$filename] = array('filename' => $filename, 'type' => checkType($ext), 'creator' => $creator, 'album' => $album, 'title' => $filename, 'annotation' => '', 'duration' => '', 'location' => array($file), 'image' => '', 'info' => '', 'path' => $path);
+					 }
+					} else if($ct == 'video') {
+						if(!isset($playArr[$filename]['location']) || $playArr[$filename]['location'] === NULL){
 						// First source
-						$l = array($file);
-					} else {
+							$l = array($file);
+						} else {
 						// Additional Sources
-						$l = $playArr[$filename]['location'];
-						array_push($l,$file);
+							$l = $playArr[$filename]['location'];
+							array_push($l,$file);
+						}
+						$playArr[$filename] = array('filename' => $filename, 'type' => checkType($ext), 'creator' => $creator, 'album' => $album, 'title' => $filename, 'annotation' => '', 'duration' => '', 'location' => $l, 'image' => '', 'info' => '', 'path' => $path);
 					}
-					$playArr[$filename] = array('filename' => $filename, 'type' => checkType($ext), 'creator' => $creator, 'album' => $album, 'title' => $filename, 'annotation' => '', 'duration' => '', 'location' => $l, 'image' => '', 'info' => '', 'path' => $path);
+
 				}
 
-            }
-
-        }
+			}
 
     } // endwhile
     // Close the directory handle
@@ -206,18 +206,18 @@ function scanMedia( $path = '.', $id3, $level = 0, $dir = ''){
 
     // Merge loose image array with associated tracks
     foreach($playArr as &$playVal){
-	    for ($i=0;$i<sizeOf($imgArr);$i++){
+    	for ($i=0;$i<sizeOf($imgArr);$i++){
 	    	//Apply track image
-	    	if ($imgArr[$i]['filename'] == $playVal['filename']){
-	    		$playVal['image'] = $imgArr[$i]['image'];
-	    	} else {
+    		if ($imgArr[$i]['filename'] == $playVal['filename']){
+    			$playVal['image'] = $imgArr[$i]['image'];
+    		} else {
 	    	// Apply album/creator image
-    		    for ($k=0;$k<sizeOf($gloArr);$k++){
-	    		    if ($gloArr[$k]['path'] == $playVal['path']){
-		    			$playVal['image'] = ''.$gloArr[$k]['path'].'/'.$gloArr[$k]['file'];
-		    		}
-    		    }
-	    	}
+    			for ($k=0;$k<sizeOf($gloArr);$k++){
+    				if ($gloArr[$k]['path'] == $playVal['path']){
+    					$playVal['image'] = ''.$gloArr[$k]['path'].'/'.$gloArr[$k]['file'];
+    				}
+    			}
+    		}
     	}
     	//echo $globalImg;
     	// Apply global image
@@ -226,9 +226,9 @@ function scanMedia( $path = '.', $id3, $level = 0, $dir = ''){
     }
 
     // Directory Scan Complete
-	if($dir == ''){
-		return $playArr;
-	}
+    if($dir == ''){
+    	return $playArr;
+    }
 }
 
 
