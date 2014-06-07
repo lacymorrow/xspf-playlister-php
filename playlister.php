@@ -4,10 +4,10 @@
  * This class reads a directory of media files and generates a
  * XML/XSPF formatted playlist
  *
- * @author     lacymorrow
+ * @author     Lacy Morrow
  * @website    www.lacymorrow.com
  * @copyright  Copyright (c) 2012 Lacy Morrow. All rights reserved.
- * @license    Proprietary/Closed Source
+ * @license    MIT
 */
 
 ########################
