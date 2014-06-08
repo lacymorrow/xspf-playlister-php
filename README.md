@@ -1,4 +1,4 @@
-xspf-playlister 0.1.0
+XSPF Playlister
 ===============
 
 > *It actually works pretty well!*
