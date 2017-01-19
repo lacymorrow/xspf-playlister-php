@@ -10,6 +10,14 @@ Use it on the command line once or as a dead-simple way to keep a playlist on th
 ## Usage
 Place all of your media files into a folder called `media`. Copy `playlister.php` and the `getid3` directory to the same location as the media directory. Run `playlister.php` or open it in your browser to generate and print your XSPF file. That's it!
 
+- root
+  - playlisster.php
+  - getid3
+    - ...
+   
+
+## File Types
+
 Supports `mp3`, `wav`, and `ogg` audio and `mp4`, `webm`, and `ogv` video formats. 
 
 If two video files of different types share a filename, they will be interpreted as two sources for the same track. 
