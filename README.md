@@ -1,7 +1,6 @@
 XSPF Playlister
 ===============
-
-> *It actually works pretty well!*
+> Files -> playlists
 
 Generate an XSPF playlist file for audio and video files using PHP. 
 Use it on the command line once or as a dead-simple way to keep a playlist on the internet up to date. 
