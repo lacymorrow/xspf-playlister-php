@@ -1,3 +1,6 @@
+> [!WARNING]
+> This project is unmaintained.
+
 XSPF Playlister
 ===============
 > Media files -> `.xspf` playlists
